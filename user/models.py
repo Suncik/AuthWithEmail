@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
 
 
 # 🔹 MANAGER (tepada bo‘lishi shart)
@@ -57,3 +58,15 @@ class EmailVerification(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.code}"
+    
+
+#=============================POST================================
+
+class Post(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title=models.CharField(max_length=255)
+    content=models.TextField()
+    created_at=models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title

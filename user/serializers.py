@@ -134,17 +134,17 @@ class LoginSerializer(serializers.Serializer):
     
     def validate(self, data): 
         email=data.get('email')  
-        password=data.get('password')
+        password=data.get('password')  
         user=authenticate(username=email, password=password)
         
-        if not user:
+        if not user:  
             raise serializers.ValidationError('invalid credentials')
         
         if not user.is_active:
             raise serializers.ValidationError('User not verified')
         refresh=RefreshToken.for_user(user)
         
-        return{  
+        return{    
             "refresh": str(refresh),
             "access": str(refresh.access_token),
             "user":{
@@ -167,7 +167,7 @@ class ResendCodeSerialaizer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("User not found")
         
-        if user.is_verified:  
+        if user.is_verified:    
             if not user.is_active:
                 user.is_active=True
                 user.save()
@@ -193,3 +193,103 @@ class ResendCodeSerialaizer(serializers.Serializer):
             recipient_list=[user.email],
         )
         return user  
+    
+    
+# =========================FORGOT PASSWORD=================================
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email=serializers.EmailField()
+    def validate(self, data):
+        user=User.objects.filter(email=data['email']).first()
+        if not user:
+            raise serializers.ValidationError("user not found")
+        
+        data['user']=user  
+        return data
+    def create(self, validated_data):
+        user=validated_data['user']
+        
+        EmailVerification.objects.filter(user=user, type='reset').delete()
+        
+        code=generate_code()
+        EmailVerification.objects.create(
+            user=user,
+            code=code,
+            type='reset'    
+        )
+        send_mail(
+            subject='Password reset code',
+            message=f'Your reset code is: {code}',
+            from_email=None,
+            recipient_list=[user.email],
+        )
+        
+        return user  
+
+       
+        
+#==============================RESET PASSWORD==========================
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email=serializers.EmailField()
+    code=serializers.CharField()
+    new_password=serializers.CharField()
+    
+    def validate(self, data):  
+        email=data['email']
+        code=data['code']
+        
+        user=User.objects.filter(email=email).first()
+        if not user:
+            raise serializers.ValidationError("user not found")
+        
+        user=User.objects.filter(email=email).first()
+        if not user:
+            raise serializers.ValidationError('User not found')
+        
+        try:
+            verification=EmailVerification.objects.filter(
+                user=user,
+                code=code,
+                type='reset'
+            ).latest('created_at')
+            
+        except EmailVerification.DoesNotExist:
+            raise serializers.ValidationError("Invalid code")
+        
+        if verification.is_expired():
+            raise serializers.ValidationError("Code Expired")
+        
+        data["user"]=user
+        data["verification"]=verification
+        return data
+    
+    def create(self, validated_data):
+        user=validated_data["user"]
+        verification=validated_data["verification"]
+        
+        user.set_password(validated_data["new_password"])
+        user.save()
+        
+        verification.delete()  
+        
+        return user  
+
+
+# ===========================POST=======================================
+
+class PostSerializer(serializers.ModelSerializer):    
+    class Meta:  
+        model=Post
+        fields=['id', 'content', 'title', 'created_at']
+    
+# bunday shaklda yozishimiz ham mumkin 
+        
+# class PostSerializer(serializers.Serializer):
+#     title = serializers.CharField()
+#     content = serializers.CharField()
+
+#     def create(self, validated_data):
+#         return Post.objects.create(**validated_data)
+    
+    
