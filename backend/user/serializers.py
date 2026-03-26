@@ -2,12 +2,12 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
-from django.core.mail import send_mail
+from django.core.mail import send_mail  
 import random   
 
 
 def generate_code():
-    return str(random.randint(100000, 999999))
+    return str(random.randint(100000, 999999))   
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,9 +35,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     #     )
         
     #     send_mail(
-    #         subject='Your verification code',
+    #         subject='Your verification code',  
     #         message=f'your code is: {code}',
-    #         from_email=None,
+    #         from_email=None,  
     #         recipient_list=[user.email],
             
     #     )
@@ -50,7 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         user, created = User.objects.get_or_create(
             email=email,
-            defaults={
+            defaults={ 
                 "username": username
             }
         )
@@ -68,7 +68,7 @@ class RegisterSerializer(serializers.ModelSerializer):
              message=f'Your code is: {code}',
             from_email=None,
             recipient_list=[user.email],
-            subject='Your verification code',
+            subject='Your verification code',   
         )
    
 
@@ -79,7 +79,7 @@ class VerifySerializer(serializers.Serializer):
     email=serializers.EmailField()
     code=serializers.CharField(max_length=6)
     
-    def validate(self, data):
+    def validate(self, data):     
         email=data.get('email')  
         code=data.get('code')    
         
@@ -271,9 +271,9 @@ class ResetPasswordSerializer(serializers.Serializer):
         user.set_password(validated_data["new_password"])
         user.save()
         
-        verification.delete()  
+        verification.delete()     
         
-        return user  
+        return user    
 
 
 # ===========================POST=======================================
@@ -283,7 +283,7 @@ class PostSerializer(serializers.ModelSerializer):
         model=Post
         fields=['id', 'content', 'title', 'created_at']
     
-# bunday shaklda yozishimiz ham mumkin 
+ 
         
 # class PostSerializer(serializers.Serializer):
 #     title = serializers.CharField()

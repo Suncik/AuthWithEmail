@@ -29,14 +29,14 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),       # Access token 1 soat
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),          # Refresh token 1 kun
-    'ROTATE_REFRESH_TOKENS': True,                        # Refresh tokenni yangilash
-    'BLACKLIST_AFTER_ROTATION': True,                     # Eski refresh tokenni bloklash
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),       
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),         
+    'ROTATE_REFRESH_TOKENS': True,                        
+    'BLACKLIST_AFTER_ROTATION': True,                    
     'UPDATE_LAST_LOGIN': False,
     
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,                   # Productionda maxfiy kalit
+    'SIGNING_KEY': SECRET_KEY,                  
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
@@ -48,7 +48,7 @@ SIMPLE_JWT = {
 }
 
 SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
+    'SECURITY_DEFINITIONS': {  
         'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
@@ -79,6 +79,8 @@ INSTALLED_APPS = [
      'rest_framework_simplejwt.token_blacklist',
     
     'drf_yasg',
+    
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -88,6 +90,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -98,6 +101,47 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",      
+    "http://127.0.0.1:3000",
+]
+
+
+
+CORS_ALLOW_CREDENTIALS = True  
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://yourdomain.com",
+    "https://www.yourdomain.com",
+    "http://localhost:3000", 
+]
+
+# Yoki regex orqali:
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.yourdomain\.com$",
+]
 
 TEMPLATES = [  
     {

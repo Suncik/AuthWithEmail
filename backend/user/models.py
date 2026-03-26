@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.conf import settings
 
 
-# 🔹 MANAGER (tepada bo‘lishi shart)
+
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
         if not email:
@@ -15,7 +15,7 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, username=username)
         user.set_password(password)
         user.is_active = False
-        user.save()
+        user.save()  
         return user
 
     def create_superuser(self, email, username, password):
@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-# 🔹 USER MODEL
+
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
@@ -42,8 +42,8 @@ class User(AbstractUser):
         return self.email
 
 
-# 🔹 EMAIL VERIFICATION MODEL
-class EmailVerification(models.Model):
+#
+class EmailVerification(models.Model):  
     TYPE_CHOICES=(
         ('verify', 'verify'),
         ('reset', 'Reset Password'),
@@ -53,7 +53,7 @@ class EmailVerification(models.Model):
     type=models.CharField(max_length=10, choices=TYPE_CHOICES, default='verify')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def is_expired(self): 
+    def is_expired(self):     
         return timezone.now() > self.created_at + timedelta(minutes=5)
 
     def __str__(self):
@@ -68,5 +68,5 @@ class Post(models.Model):
     content=models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
     
-    def __str__(self):
-        return self.title
+    def __str__(self):   
+        return self.title 

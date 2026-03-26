@@ -59,7 +59,7 @@ def reverseWord(s):
 
 # def move(arr, n):
 #     j=0
-#     for i in range(0,n):
+#     for i in range(0,n):  
 #         if arr[i]<0:
 #             temp=arr[i]
 #             arr[i]=arr[j]
@@ -90,14 +90,14 @@ def reverseWord(s):
 #     a=set(arr1)
 #     b=set(arr2)
 #     c=a.union(b) 
-#     print(c)
+#     print(c)  
     
 # Union([1,2], [2,3])  # {1, 2, 3}
 
 # def Union(a, b, n, m):
 #     c=set()
 #     for i in range(0, n):
-#         c.add(a[i])
+#         c.add(a[i])  
 #     for i in range(0,m):
 #         c.add(b[i])
 #     return c
@@ -140,18 +140,18 @@ import math
 def merge(arr1, arr2, n, m):
     gap = math.ceil((n + m) / 2)
     
-    while gap > 0:
+    while gap > 0:  
         i = 0
-        j = gap
+        j = gap  
         
-        while j < (n + m):
-            # arr1 va arr1 ichida
+        while j < (n + m):   
+            # arr1 va arr1 ichida   
             if i < n and j < n:
                 if arr1[i] > arr1[j]:
-                    arr1[i], arr1[j] = arr1[j], arr1[i]
+                    arr1[i], arr1[j] = arr1[j], arr1[i] 
             
-            # arr1 va arr2 orasida
-            elif i < n and j >= n:
+            # arr1 va arr2 orasida  
+            elif i < n and j >= n:   
                 if arr1[i] > arr2[j - n]:
                     arr1[i], arr2[j - n] = arr2[j - n], arr1[i]
             
@@ -163,19 +163,19 @@ def merge(arr1, arr2, n, m):
             i += 1
             j += 1
         
-        if gap == 1:
+        if gap == 1:       
             gap = 0
         else:
             gap = math.ceil(gap / 2)
 
-# Example
-arr1 = [1, 4, 7, 8, 10]
-arr2 = [2, 3, 9]
+# Example    
+arr1 = [1, 4, 7, 8, 10]   
+arr2 = [2, 3, 9] 
 
 merge(arr1, arr2, len(arr1), len(arr2))
 
 print(arr1)  # [1, 2, 3, 4, 7]
-print(arr2)  # [8, 9, 10]
+print(arr2)  # [8, 9, 10]  
     
 
 
